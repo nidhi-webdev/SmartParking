@@ -1,0 +1,46 @@
+<div class="img-div">
+    <img src="/assets/images/Images.jpg" alt="Car Parking">
+</div>
+
+<div class="login-form-container">
+    <form class="login-form" [formGroup] = "myForm" (ngSubmit)="login()">
+        <h2>Login</h2>
+        
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" formControlName="email" placeholder="Enter your email">
+            @if (!myForm.controls['email'].valid && myForm.controls['email'].touched) {
+                <span class="error-message">Email is required</span>
+            }
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" formControlName="password" placeholder="Enter your password">
+            @if (!myForm.controls['password'].valid && myForm.controls['password'].touched) {
+                <span class="error-message">Password is required</span>
+            }
+        </div>
+
+        <!-- <div class="form-group">
+            <label for="loginAs">Login As</label>
+            <mat-form-field appearance="outline" class="mat-select-field">
+                <mat-select formControlName="select" placeholder="Select your role">
+                    <mat-option value="entry gate operator">Entry gate operator</mat-option>
+                    <mat-option value="exit gate operator">Exit gate operator</mat-option>
+                    <mat-option value="administrator">Administrator</mat-option>
+                </mat-select>
+            </mat-form-field>
+            @if (!myForm.controls['select'].valid && myForm.controls['select'].touched) {
+                <span class="error-message">Please select a role</span>
+            }
+        </div> -->
+        
+        <button type="submit" class="login-btn" [disabled]="!myForm.valid">Login</button>
+        
+        <div class="form-links">
+            <a href="#" class="forgot-password">Forgot Password?</a>
+            <a href="#" class="signup-link">Don't have an account? Sign up</a>
+        </div>
+    </form>
+</div>
