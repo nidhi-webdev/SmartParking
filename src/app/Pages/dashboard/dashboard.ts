@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import {Master} from '../../Services/master';
+import { Component, OnInit, ChangeDetectorRef, AfterViewInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Master } from '../../Services/master';
 import { Isite, responseModel } from '../../Models/login.model';
 import { UserService } from '../../Services/user';
-import { CommonModule } from '@angular/common';
-
 
 @Component({
   selector: 'app-dashboard',
@@ -11,39 +10,50 @@ import { CommonModule } from '@angular/common';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
-export class Dashboard implements OnInit {
+export class Dashboard implements OnInit, AfterViewInit {
+  siteList = signal<Isite[]>([]);
   
-  siteList: Isite[] = [];
-  
- constructor(private master: Master, public userservice: UserService) {
-  this.userservice.restoreUserFromStorage();
-  console.log('loggedIndata in constructor:', this.userservice.loggedIndata);
-}
+  constructor(
+    private master: Master, 
+    public userService: UserService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-ngOnInit(): void {
-  if (!this.userservice.loggedIndata?.extraId) {
-    if (typeof window !== 'undefined') {
-      alert('Please log in first!');
-      // Optionally, redirect to login page
-      // window.location.href = '/login'; // Uncomment and set your login route if needed
-    }
-    return;
+  ngOnInit(): void {
+    setTimeout(() => {
+      if (!this.userService.loggedIndata?.extraId) {
+        if (typeof window !== 'undefined') {
+          alert('Please log in first!');
+        }
+        return;
+      }
+      this.getSites();
+    }, 100);
   }
-  this.getSite();
-  console.log('siteList value from the oninit', this.siteList);
-}
 
-getSite() {
-  this.master.getSitesByClientId().subscribe({
-    next: (res: responseModel) => {
-      console.log('Full API response:', res);
-      this.siteList = res.data;
-      console.log('Site list:', this.siteList);
-    },
-    error: (error) => {
-      console.error('Error fetching sites:', error);
-    }
-  });
-}
+  ngAfterViewInit(): void {
+    // Retry loading data after view is fully initialized if not already loaded
+    setTimeout(() => {
+      if (this.userService.loggedIndata?.extraId && this.siteList().length === 0) {
+        this.getSites();
+      }
+    }, 200);
+  }
 
+  private getSites(): void {
+    this.master.getSitesByClientId().subscribe({
+      next: (res: responseModel) => {
+        if (res.data && Array.isArray(res.data)) {
+          this.siteList.set(res.data);
+          this.cdr.detectChanges();
+        } else {
+          this.siteList.set([]);
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching sites:', error);
+        this.siteList.set([]);
+      }
+    });
+  }
 }

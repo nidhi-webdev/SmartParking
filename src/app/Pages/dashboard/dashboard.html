@@ -7,8 +7,8 @@
         <div class="dashboard-filters">
             <select class="form-select filter-select">
                 <option value="">Select Site</option>
-                @for (item of siteList; track item.siteId) {
-                <option [value]="item.siteId">{{item.siteName}}</option>
+                @for (item of siteList(); track item.siteId) {
+                    <option [value]="item.siteId">{{item.siteName}}</option>
                 }
             </select>
             <select class="form-select filter-select">

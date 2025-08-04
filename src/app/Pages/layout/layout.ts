@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { UserService } from '../../Services/user';
 
@@ -8,16 +8,16 @@ import { UserService } from '../../Services/user';
   templateUrl: './layout.html',
   styleUrl: './layout.scss'
 })
-export class Layout {
-  userservice = inject(UserService);
+export class Layout implements OnInit {
+  userService = inject(UserService);
   router = inject(Router);
 
-  logoff() {
-    // if (typeof window !== 'undefined') {
-    //   localStorage.removeItem("parkUser");
-    // }
-    // this.userservice.loggedIndata = undefined;
-    // this.router.navigateByUrl('/login');
-    
+  ngOnInit(): void {
+    // User data is already restored in app.ts
+  }
+
+  logoff(): void {
+    this.userService.clearUserData();
+    this.router.navigateByUrl('/login');
   }
 }

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { UserService } from './Services/user';
 
@@ -8,11 +8,12 @@ import { UserService } from './Services/user';
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
+export class App implements OnInit {
   protected readonly title = signal('carParking');
 
-  constructor(private userservice: UserService) {}
-  ngOnInit() {
-    this.userservice.restoreUserFromStorage();
+  constructor(private userService: UserService) {}
+  
+  ngOnInit(): void {
+    this.userService.restoreUserFromStorage();
   }
 }
