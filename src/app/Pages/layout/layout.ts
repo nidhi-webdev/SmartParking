@@ -8,13 +8,9 @@ import { UserService } from '../../Services/user';
   templateUrl: './layout.html',
   styleUrl: './layout.scss'
 })
-export class Layout implements OnInit {
+export class Layout  {
   userService = inject(UserService);
   router = inject(Router);
-
-  ngOnInit(): void {
-    // User data is already restored in app.ts
-  }
 
   logoff(): void {
     this.userService.clearUserData();

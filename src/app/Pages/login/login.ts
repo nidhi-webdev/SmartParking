@@ -31,7 +31,6 @@ export class Login {
 
     this.userservice.loginUser(newUser).subscribe({
       next: (res) => {
-        alert("logged In");
         if (typeof window !== 'undefined') {
           localStorage.setItem("parkUser", JSON.stringify(res));
         }

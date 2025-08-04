@@ -37,6 +37,7 @@ export class UserService {
     }
   }
 
+// layout component 
   clearUserData(): void {
     if (typeof window === 'undefined') return;
     
