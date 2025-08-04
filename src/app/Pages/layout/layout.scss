@@ -1,0 +1,97 @@
+.dashboardHeader {
+  .navbar-expand-lg {
+    background: #3386ff !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+  }
+  .navbar-brand {
+    font-weight: bold;
+    font-size: 1.7rem;
+    letter-spacing: 1px;
+    color: #fff;
+    text-decoration: none;
+    margin-left: 1.5rem;
+    padding-top: 0.2rem;
+    display: flex;
+    align-items: center;
+  }
+  .container-fluid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2.5rem;
+    padding: 0 1.5rem;
+    min-height: 56px;
+  }
+  .navbar-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+    padding-left: 0;
+    margin-bottom: 8px;
+  }
+  .nav-link {
+    text-decoration: none;
+    font-size: 1.15rem;
+    color: #e3eefd;
+    font-weight: 500;
+    transition: color 0.2s;
+    padding: 0 0.5rem;
+  }
+  .nav-link.active, .nav-link:hover {
+    color: #fff;
+  }
+  .navbar-nav .nav-item {
+    list-style: none;
+  }
+  .user-section {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-left: auto;
+    min-width: 220px;
+    margin-right: 15px; // Add right margin for logout button spacing
+  }
+  .role-badge {
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.4em 0.9em;
+    border-radius: 0.8em;
+    background: #fff !important;
+    color: #0d6efd !important;
+    border: 1.5px solid #0d6efd;
+    display: flex;
+    align-items: center;
+    height: 2.1em;
+  }
+  .user-name {
+    color: #fff;
+    font-weight: 500;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    height: 2.1em;
+  }
+  
+ 
+  @media (max-width: 991.98px) {
+    .container-fluid {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.5rem;
+      min-height: unset;
+    }
+    .navbar-nav {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .user-section {
+      margin-left: 0;
+      margin-top: 0.5rem;
+      min-width: unset;
+      justify-content: flex-start;
+    }
+  }
+}

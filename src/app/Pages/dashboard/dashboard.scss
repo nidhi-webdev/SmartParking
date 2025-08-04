@@ -1,0 +1,224 @@
+.dashboard-container {
+    padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+    background: #f8fafc;
+    min-height: 100vh;
+}
+
+.dashboard-header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+
+    .dashboard-header-left {
+        flex-grow: 1;
+    }
+
+    .dashboard-filters {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .filter-select {
+        min-width: 150px;
+        max-width: 200px;
+        border-radius: 0.5rem;
+        border: 1.5px solid #e3eefd;
+        font-size: 0.95rem;
+        padding: 0.5rem 0.75rem;
+        background-color: #fff;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+
+        &:focus {
+            border-color: #3386ff;
+            box-shadow: 0 0 0 0.15rem rgba(51, 134, 255, 0.15);
+            outline: none;
+        }
+
+        &:hover {
+            border-color: #b0b8c1;
+        }
+    }
+}
+
+.dashboard-title {
+    margin-top: 0;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+}
+
+.dashboard-subtitle {
+    color: #7b8a99;
+    font-size: 15px;
+}
+
+.dashboard-search {
+    min-width: 320px;
+}
+
+.dashboard-search .form-control {
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    box-shadow: none;
+    padding: 8px 0 8px 12px;
+    border: 1.5px solid #e3eefd;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &::placeholder {
+        color: #b0b8c1;
+        opacity: 1;
+    }
+
+    &:focus {
+        border-color: #b0b8c1;
+        box-shadow: 0 2px 8px 0 rgba(60, 72, 88, 0.07);
+        outline: none;
+    }
+}
+
+.dashboard-cards {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: nowrap;
+
+    .dashboard-card {
+        flex: 1 1 220px;
+        min-width: 220px;
+        max-width: 300px;
+        background: #fff;
+        border: none;
+        border-radius: 1.1rem;
+        box-shadow: 0 2px 12px 0 rgba(60, 72, 88, 0.07);
+        display: flex;
+        align-items: stretch;
+
+        .card-body {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            height: 120px;
+            padding: 1.2rem 2.2rem 1.2rem 2.2rem;
+            width: 100%; // Ensure the flex container fills the card
+        }
+
+        .card-label {
+            color: #6c757d;
+            font-size: 1.15rem;
+            font-weight: 500;
+            margin-bottom: 0.7rem;
+            letter-spacing: 0.01em;
+        }
+
+        .card-value {
+            font-size: 2.3rem;
+            font-weight: 700;
+            color: #222;
+            margin-top: 0;
+            line-height: 1.1;
+        }
+
+        .card-circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px 0 rgba(60, 72, 88, 0.10);
+            margin-left: auto; // Pushes the circle to the end of the card
+        }
+    }
+}
+
+// Remove Bootstrap card border globally for dashboard cards
+.dashboard-card.card {
+    border: none;
+}
+
+// Responsive adjustments
+@media (max-width: 1200px) {
+    .dashboard-cards {
+        gap: 1.2rem;
+    }
+
+    .dashboard-card {
+        min-width: 180px;
+
+        .card-body {
+            height: 100px;
+            padding: 1rem 1rem 1rem 1rem;
+        }
+
+        .card-circle {
+            width: 44px;
+            height: 44px;
+        }
+    }
+}
+
+.parking-layout-section {
+    margin-top: 2.5rem;
+}
+
+.parking-layout-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.parking-legend {
+    background: #fff;
+    border-radius: 0.7rem;
+    box-shadow: 0 2px 8px 0 rgba(60, 72, 88, 0.07);
+    font-size: 1.1rem;
+    gap: 2.2rem !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    padding: 20px 0 35px 15px;
+    margin-bottom: 1.5rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.legend-dot {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 0.3rem;
+    border: 1.5px solid #e3eefd;
+}
+
+.bg-success {
+    background: #198754 !important;
+}
+
+.bg-danger {
+    background: #dc3545 !important;
+}
+
+.bg-warning {
+    background: #ffc107 !important;
+}
+
+.bg-secondary {
+    background: #adb5bd !important;
+}
+
+.bg-primary {
+    background: #0d6efd !important;
+}
+
+.bg-info {
+    background: #0dcaf0 !important;
+}
