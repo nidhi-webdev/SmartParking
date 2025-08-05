@@ -8,26 +8,26 @@
             <select class="form-select filter-select" id="" [(ngModel)]="siteId" (change)="getBuildings(siteId)">
                 <option value="0">Select Site</option>
                 @for (item of siteList(); track item.siteId) {
-                    <option [value]="item.siteId">
-                        🏢 <span class="site-option-name">{{item.siteName}}</span>
-                    </option>
+                <option [value]="item.siteId">
+                    🏢 <span class="site-option-name">{{item.siteName}}</span>
+                </option>
                 }
             </select>
             <select class="form-select filter-select" id="" [(ngModel)]="buildingId" (change)="getFloor(buildingId)">
                 <option value="0">Select Building </option>
                 @for (item of buildingList(); track item.buildingId) {
-                    <option [value]="item.buildingId">
-                        🏢 <span class="site-option-name">{{item.buildingName}}</span>
-                    </option>
+                <option [value]="item.buildingId">
+                    🏢 <span class="site-option-name">{{item.buildingName}}</span>
+                </option>
                 }
             </select>
 
-            <select class="form-select filter-select" id="">
+            <select class="form-select filter-select" id="" [(ngModel)]="floorId" (change)="getFloorsBlock()">
                 <option value="0">Select Floor</option>
-                 @for (item of flooList(); track item.floorId) {
-                    <option [value]="item.floorId">
-                        🏢 <span class="site-option-name">{{item.floorNo}}</span>
-                    </option>
+                @for (item of flooList(); track item.floorId) {
+                <option [value]="item.floorId">
+                    🏢 <span class="site-option-name">{{item.floorNo}}</span>
+                </option>
                 }
             </select>
         </div>
@@ -39,7 +39,7 @@
                 <div class="card-body d-flex justify-content-between align-items-center">
                     <div>
                         <div class="card-label">Total Spots</div>
-                        <div class="card-value">50</div>
+                        <div class="card-value">{{parkingBlocks.length}}</div>
                     </div>
                     <div class="card-circle bg-primary"></div>
                 </div>
@@ -50,7 +50,7 @@
                 <div class="card-body d-flex justify-content-between align-items-center">
                     <div>
                         <div class="card-label">Available</div>
-                        <div class="card-value text-success">28</div>
+                        <div class="card-value text-success">{{parkingBlocks.length}}</div>
                     </div>
                     <div class="card-circle bg-success"></div>
                 </div>
@@ -61,7 +61,7 @@
                 <div class="card-body d-flex justify-content-between align-items-center">
                     <div>
                         <div class="card-label">Occupied</div>
-                        <div class="card-value text-danger">22</div>
+                        <div class="card-value text-danger">0</div>
                     </div>
                     <div class="card-circle bg-danger"></div>
                 </div>
@@ -72,7 +72,7 @@
                 <div class="card-body d-flex justify-content-between align-items-center">
                     <div>
                         <div class="card-label">Occupancy Rate</div>
-                        <div class="card-value text-info">44%</div>
+                        <div class="card-value text-info">0%</div>
                     </div>
                     <div class="card-circle bg-info"></div>
                 </div>
@@ -83,11 +83,20 @@
     <div class="parking-layout-section">
         <h3 class="parking-layout-title">Parking Layout</h3>
         <div class="parking-legend card p-3 mb-3 d-flex flex-row align-items-center gap-4">
-            <span class="legend-item"><span class="legend-dot bg-success"></span> Available</span>
-            <span class="legend-item"><span class="legend-dot bg-danger"></span> Occupied</span>
-            <span class="legend-item"><span class="legend-dot bg-warning"></span> Reserved</span>
-            <span class="legend-item"><span class="legend-dot bg-secondary"></span> Maintenance</span>
+            <span class="legend-item"><span class="legend-dot bg-success"></span> Available
+            ({{parkingBlocks.length}})
+        </span>
+            <span class="legend-item"><span class="legend-dot bg-danger"></span> Occupied (0)
+        </span>
         </div>
-        <!-- Parking layout grid goes here -->
+
+        @for (item of parkingBlocks; track $index) {
+        <div class="parking-layout" id="parkingLayout" (click)="openModal(item)">
+            <div class="parking-slot-available" data-id="{{item}}" data-status="Available">
+                <div class="spot-number"> A{{item}} </div>
+                <div class="spot-status"> Available </div>
+            </div>
+        </div>
+        }
     </div>
 </div>

@@ -1,0 +1,79 @@
+.parking-modal-card {
+  width: 90vw;
+  max-width: 600px;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 24px rgba(60,72,88,0.12);
+  padding: 2rem 5rem 2rem 2rem;
+}
+
+.modal-title {
+  text-align: left;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.parking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.form-control {
+  border-radius: 0.5rem;
+  border: 1.5px solid #e3eefd;
+  font-size: 1rem;
+  padding: 0.6rem 0.9rem;
+  background: #f8fafc;
+  transition: border-color 0.2s;
+}
+
+.form-control:focus {
+  border-color: #3386ff;
+  outline: none;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn {
+  padding: 0.6rem 1.4rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary {
+  background: #198754;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #157347;
+}
+
+.btn-secondary {
+  background: #e3eefd;
+  color: #222;
+}
+
+.btn-secondary:hover {
+  background: #b0b8c1;
+}

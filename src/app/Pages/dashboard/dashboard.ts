@@ -4,10 +4,14 @@ import { Master } from '../../Services/master';
 import { Ibuilding, Ifloor, Isite, responseModel } from '../../Models/login.model';
 import { UserService } from '../../Services/user';
 import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ParkingSlotModalComponent } from '../../Modals/parking-slot-modal-component/parking-slot-modal-component';
+
 
 
 @Component({
   selector: 'app-dashboard',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
@@ -19,11 +23,14 @@ export class Dashboard implements OnInit {
   siteId: number = 0;
   buildingId: number = 0;
   Ifloor: number = 0;
+  parkingBlocks: number[] = [];
+  floorId: number = 0;
 
 
   constructor(
     private master: Master,
-    public userService: UserService
+    public userService: UserService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -40,6 +47,10 @@ export class Dashboard implements OnInit {
       }
       this.getSites();
     }, 100);
+  }
+
+  openModal(spotNo: number) {
+    this.dialog.open(ParkingSlotModalComponent);
   }
 
   getSites(): void {
@@ -83,19 +94,29 @@ export class Dashboard implements OnInit {
       this.master.getFloorBySiteId(buildingId).subscribe({
         next: (res: responseModel) => {
           if (res.data && Array.isArray(res.data)) {
-            this.flooList.set(res.data)
+            this.flooList.set(res.data);
           } else {
             this.flooList.set([]);
+            console.log('flooList:', this.flooList());
           }
         },
         error: (error) => {
           console.log('Error fetching floor:', error);
           this.flooList.set([]);
+          console.log('flooList:', this.flooList());
         }
       });
 
     } else {
       console.log('No Building selected')
+    }
+  }
+
+  getFloorsBlock() {
+    const floor = this.flooList()?.find((m: Ifloor) => m.floorId == this.floorId);
+    this.parkingBlocks = [];
+    if (floor) {
+      this.parkingBlocks = Array.from({ length: floor.totalParkingSpots }, (_, i) => i + 1);
     }
   }
 

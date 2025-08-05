@@ -1,0 +1,33 @@
+<div class="parking-modal-card">
+    <h4 class="modal-title">Book Parking Spot</h4>
+    <form class="parking-form">
+        <div class="form-group">
+            <label for="spotNo">Park Spot No.</label>
+            <input id="spotNo" type="text" class="form-control" placeholder="Spot No." />
+        </div>
+        <div class="form-group">
+            <label for="vehicleNo">Vehicle No.</label>
+            <input id="vehicleNo" type="text" class="form-control" placeholder="Enter Vehicle No." />
+        </div>
+        <div class="form-group">
+            <label for="amount">Amount</label>
+            <input id="amount" type="text" class="form-control" placeholder="Enter Amount" />
+        </div>
+        <div class="form-group">
+            <label for="customerName">Customer Name</label>
+            <input id="customerName" type="text" class="form-control" placeholder="Customer Name" />
+        </div>
+        <div class="form-group">
+            <label for="contactNumber">Contact Number</label>
+            <input id="contactNumber" type="text" class="form-control" placeholder="Contact Number" />
+        </div>
+        <div class="form-group">
+            <label for="entryTime">Entry Time</label>
+            <input id="entryTime" type="time" class="form-control" />
+        </div>
+        <div class="form-actions">
+            <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Confirm Booking</button>
+        </div>
+    </form>
+</div>

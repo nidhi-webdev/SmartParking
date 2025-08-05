@@ -95,6 +95,7 @@
         box-shadow: 0 2px 12px 0 rgba(60, 72, 88, 0.07);
         display: flex;
         align-items: stretch;
+        cursor: pointer;
 
         .card-body {
             display: flex;
@@ -131,12 +132,29 @@
             box-shadow: 0 2px 8px 0 rgba(60, 72, 88, 0.10);
             margin-left: auto; // Pushes the circle to the end of the card
         }
+
+        &:hover {
+            animation: card-blink 0.7s linear infinite;
+        }
     }
 }
 
 // Remove Bootstrap card border globally for dashboard cards
 .dashboard-card.card {
     border: none;
+}
+
+// Blink animation for dashboard cards
+@keyframes card-blink {
+
+    0%,
+    100% {
+        box-shadow: 0 2px 12px 0 rgba(60, 72, 88, 0.07);
+    }
+
+    50% {
+        box-shadow: 0 2px 12px 0 rgba(13, 202, 240, 0.35);
+    }
 }
 
 // Responsive adjustments
@@ -227,4 +245,67 @@
 .site-option-name {
     font-weight: 600;
     letter-spacing: 0.2px;
+}
+
+.parking-layout {
+    display: inline-block;
+    margin: 10px 8px;
+}
+
+.parking-slot-available,
+.parking-slot-occupied {
+    cursor: pointer;
+    width: 150px;
+    height: 150px;
+    border-radius: 12px;
+    border: 3px solid #198754;
+    background: #eafaf1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    font-size: 1.5rem;
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(60, 72, 88, 0.07);
+    // Removed transition property to avoid conflict with animation
+    &:hover {
+        animation: slot-blink 0.7s linear infinite;
+    }
+}
+
+.parking-slot-occupied {
+    border-color: #dc3545;
+    background: #fbeaea;
+}
+
+.spot-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 0.3rem;
+}
+
+.spot-status {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #198754;
+}
+
+.parking-slot-occupied .spot-status {
+    color: #dc3545;
+}
+
+// Blink animation for parking slots
+@keyframes slot-blink {
+    0%,
+    100% {
+        box-shadow: 0 2px 8px rgba(60, 72, 88, 0.07);
+        transform: translateY(0);
+    }
+
+    50% {
+        box-shadow: 0 0 32px 8px rgba(13, 202, 240, 0.55);
+        transform: translateY(-8px);
+    }
 }
