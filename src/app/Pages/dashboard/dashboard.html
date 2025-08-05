@@ -5,17 +5,30 @@
             <div class="dashboard-subtitle">Manage and monitor parking spots</div>
         </div>
         <div class="dashboard-filters">
-            <select class="form-select filter-select">
-                <option value="">Select Site</option>
+            <select class="form-select filter-select" id="" [(ngModel)]="siteId" (change)="getBuildings(siteId)">
+                <option value="0">Select Site</option>
                 @for (item of siteList(); track item.siteId) {
-                    <option [value]="item.siteId">{{item.siteName}}</option>
+                    <option [value]="item.siteId">
+                        🏢 <span class="site-option-name">{{item.siteName}}</span>
+                    </option>
                 }
             </select>
-            <select class="form-select filter-select">
-                <option value="">Select Building</option>
+            <select class="form-select filter-select" id="" [(ngModel)]="buildingId" (change)="getFloor(buildingId)">
+                <option value="0">Select Building </option>
+                @for (item of buildingList(); track item.buildingId) {
+                    <option [value]="item.buildingId">
+                        🏢 <span class="site-option-name">{{item.buildingName}}</span>
+                    </option>
+                }
             </select>
-            <select class="form-select filter-select">
-                <option value="">Select Floor</option>
+
+            <select class="form-select filter-select" id="">
+                <option value="0">Select Floor</option>
+                 @for (item of flooList(); track item.floorId) {
+                    <option [value]="item.floorId">
+                        🏢 <span class="site-option-name">{{item.floorNo}}</span>
+                    </option>
+                }
             </select>
         </div>
     </div>

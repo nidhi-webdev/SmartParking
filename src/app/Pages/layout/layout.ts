@@ -8,9 +8,14 @@ import { UserService } from '../../Services/user';
   templateUrl: './layout.html',
   styleUrl: './layout.scss'
 })
-export class Layout  {
+export class Layout implements OnInit {
   userService = inject(UserService);
   router = inject(Router);
+
+  ngOnInit(): void {
+    // Restore user data from localStorage when layout loads
+    this.userService.restoreUserFromStorage();
+  }
 
   logoff(): void {
     this.userService.clearUserData();

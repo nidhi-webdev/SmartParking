@@ -26,17 +26,6 @@ export class UserService {
     }
   }
 
-  saveUserToStorage(userData: userLogin): void {
-    if (typeof window === 'undefined') return;
-    
-    try {
-      localStorage.setItem(this.storageKey, JSON.stringify(userData));
-      this.loggedIndata = userData;
-    } catch (error) {
-      console.error('Error saving user data to localStorage:', error);
-    }
-  }
-
 // layout component 
   clearUserData(): void {
     if (typeof window === 'undefined') return;
@@ -49,9 +38,9 @@ export class UserService {
     return this.http.post<userLogin>(this.loginUrl, loginData);
   }
 
-  isLoggedIn(): boolean {
-    return !!this.loggedIndata?.extraId;
-  }
+  // isLoggedIn(): boolean {
+  //   return !!this.loggedIndata?.extraId;
+  // }
 }
 
 
