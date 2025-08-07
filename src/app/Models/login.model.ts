@@ -47,3 +47,18 @@ export interface Ifloor {
   isOperational: boolean,
   totalParkingSpots: number
 }
+
+export interface IParkingBooking {
+  parkId: number;
+  floorId: number;
+  custName: string;
+  custMobileNo: string;
+  vehicleNo: string;
+  parkDate: Date;
+  parkSpotNo: number;
+  inTime: Date | string;
+  outTime: Date | null;
+  amount: number;
+  extraCharge: number;
+  parkingNo: string;
+}

@@ -8,6 +8,8 @@
   border-radius: 1rem;
   box-shadow: 0 4px 24px rgba(60,72,88,0.12);
   padding: 2rem 5rem 2rem 2rem;
+  max-height: 100vh;
+  overflow-y: auto;
 }
 
 .modal-title {

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { UserService } from '../../Services/user';
+import { UserService } from '../../Services/user-service';
 
 @Component({
   selector: 'app-layout',
@@ -12,7 +12,7 @@ export class Layout implements OnInit {
   userService = inject(UserService);
   router = inject(Router);
 
-  ngOnInit(): void {
+   ngOnInit(): void {
     // Restore user data from localStorage when layout loads
     this.userService.restoreUserFromStorage();
   }

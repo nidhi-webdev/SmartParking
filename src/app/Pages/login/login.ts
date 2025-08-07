@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { login } from '../../Models/login.model';
-import { UserService } from '../../Services/user';
+import { UserService } from '../../Services/user-service';
 import { Router } from '@angular/router';
 
 
@@ -36,7 +36,7 @@ export class Login {
         }
         this.userservice.loggedIndata = res;
         this.myForm.reset();
-        this.router.navigateByUrl('/dashboard');
+        this.router.navigateByUrl('/app/dashboard');
       },
       error: (err) => {
         alert("falied");

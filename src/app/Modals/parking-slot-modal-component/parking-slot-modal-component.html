@@ -1,33 +1,48 @@
 <div class="parking-modal-card">
     <h4 class="modal-title">Book Parking Spot</h4>
-    <form class="parking-form">
+    <form class="parking-form" [formGroup]="myForm" (ngSubmit)="onBookSpot()">
         <div class="form-group">
             <label for="spotNo">Park Spot No.</label>
-            <input id="spotNo" type="text" class="form-control" placeholder="Spot No." />
+            <input id="spotNo" type="text"  [value]="data.spotNo" class="form-control" readonly />
         </div>
         <div class="form-group">
             <label for="vehicleNo">Vehicle No.</label>
-            <input id="vehicleNo" type="text" class="form-control" placeholder="Enter Vehicle No." />
+            <input id="vehicleNo" type="text" formControlName="vehicleNo" class="form-control" placeholder="Enter Vehicle No." />
+            @if (!myForm.controls.vehicleNo.valid && myForm.controls.vehicleNo.touched) {
+                <div> vehicleNo is required </div>
+            }
         </div>
         <div class="form-group">
             <label for="amount">Amount</label>
-            <input id="amount" type="text" class="form-control" placeholder="Enter Amount" />
+            <input id="amount" type="text" class="form-control"  formControlName="amount" placeholder="Enter Amount" />
+             @if (!myForm.controls.amount.valid && myForm.controls.amount.touched) {
+                <div> amount is required </div>
+            }
         </div>
         <div class="form-group">
             <label for="customerName">Customer Name</label>
-            <input id="customerName" type="text" class="form-control" placeholder="Customer Name" />
+            <input id="customerName" type="text" class="form-control"  formControlName="customerName" placeholder="Customer Name" />
+            @if (!myForm.controls.customerName.valid && myForm.controls.customerName.touched) {
+                <div> customerName is required </div>
+            }
         </div>
         <div class="form-group">
             <label for="contactNumber">Contact Number</label>
-            <input id="contactNumber" type="text" class="form-control" placeholder="Contact Number" />
+            <input id="contactNumber" type="text" class="form-control" formControlName="contactNumber" placeholder="Contact Number" />
+            @if (!myForm.controls.contactNumber.valid && myForm.controls.contactNumber.touched) {
+                <div> contactNumber is required </div>
+            }
         </div>
         <div class="form-group">
             <label for="entryTime">Entry Time</label>
-            <input id="entryTime" type="time" class="form-control" />
+            <input id="entryTime" type="time" formControlName="entryTime" class="form-control" />
+            @if (!myForm.controls.entryTime.valid && myForm.controls.entryTime.touched) {
+                <div> entryTime is required </div>
+            }
         </div>
         <div class="form-actions">
             <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
-            <button type="submit" class="btn btn-primary">Confirm Booking</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!myForm.valid">Confirm Booking</button>
         </div>
     </form>
 </div>

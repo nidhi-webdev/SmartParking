@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Master } from './master';
+import { Master } from './master-service';
 
 describe('Master', () => {
   let service: Master;

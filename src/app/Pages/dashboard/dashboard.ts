@@ -1,13 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Master } from '../../Services/master';
+import { Master } from '../../Services/master-service';
 import { Ibuilding, Ifloor, Isite, responseModel } from '../../Models/login.model';
-import { UserService } from '../../Services/user';
+import { UserService } from '../../Services/user-service';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ParkingSlotModalComponent } from '../../Modals/parking-slot-modal-component/parking-slot-modal-component';
-
-
 
 @Component({
   selector: 'app-dashboard',
@@ -25,7 +23,7 @@ export class Dashboard implements OnInit {
   Ifloor: number = 0;
   parkingBlocks: number[] = [];
   floorId: number = 0;
-
+  private sitesLoaded = false; // Flag to prevent multiple API calls
 
   constructor(
     private master: Master,
@@ -34,6 +32,11 @@ export class Dashboard implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // Prevent multiple initializations
+    if (this.sitesLoaded) {
+      return;
+    }
+    
     // First restore user data from localStorage
     this.userService.restoreUserFromStorage();
 
@@ -50,10 +53,25 @@ export class Dashboard implements OnInit {
   }
 
   openModal(spotNo: number) {
-    this.dialog.open(ParkingSlotModalComponent);
+    const dialogRef = this.dialog.open(ParkingSlotModalComponent, {
+      data: { spotNo }
+    });
+  }
+
+  // Method to manually refresh sites if needed
+  refreshSites(): void {
+    this.sitesLoaded = false;
+    this.getSites();
   }
 
   getSites(): void {
+    // Prevent multiple API calls
+    if (this.sitesLoaded) {
+      return;
+    }
+    
+    this.sitesLoaded = true; // Set flag before API call to prevent race conditions
+    
     this.master.getSitesByClientId().subscribe({
       next: (res: responseModel) => {
         if (res.data && Array.isArray(res.data)) {
@@ -63,8 +81,8 @@ export class Dashboard implements OnInit {
         }
       },
       error: (error) => {
-        console.error('Error fetching sites:', error);
         this.siteList.set([]);
+        this.sitesLoaded = false; // Reset flag on error so user can retry
       }
     });
   }
@@ -97,18 +115,15 @@ export class Dashboard implements OnInit {
             this.flooList.set(res.data);
           } else {
             this.flooList.set([]);
-            console.log('flooList:', this.flooList());
           }
         },
         error: (error) => {
-          console.log('Error fetching floor:', error);
+          console.error('Error fetching floor:', error);
           this.flooList.set([]);
-          console.log('flooList:', this.flooList());
         }
       });
-
     } else {
-      console.log('No Building selected')
+      console.error('No Building selected');
     }
   }
 
@@ -119,5 +134,4 @@ export class Dashboard implements OnInit {
       this.parkingBlocks = Array.from({ length: floor.totalParkingSpots }, (_, i) => i + 1);
     }
   }
-
 }

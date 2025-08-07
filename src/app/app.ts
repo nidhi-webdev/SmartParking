@@ -1,6 +1,6 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { UserService } from './Services/user';
+import { UserService } from './Services/user-service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +13,7 @@ export class App implements OnInit {
 
   constructor(private userService: UserService) {}
   
-  ngOnInit(): void {
+   ngOnInit(): void {
     this.userService.restoreUserFromStorage();
   }
 }
