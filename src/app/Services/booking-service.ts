@@ -12,6 +12,7 @@ export class BookingService {
 
   bookSpot(obj: IParkingBooking): Observable<responseModel[]> {
     return this.http.post<responseModel[]>(`${this.bookingApi}/AddParking`, obj)
+    
   }
 
 

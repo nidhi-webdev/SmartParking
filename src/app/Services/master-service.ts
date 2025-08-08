@@ -30,10 +30,16 @@ export class Master {
     return this.http.get<responseModel>(`${this.apiUrl}/GetBuildingBySiteId?id=${siteId}`);
   }
 
-  getFloorBySiteId(buildingId: number): Observable<responseModel> {
+  getFloorBybuildingId(buildingId: number): Observable<responseModel> {
     if (!buildingId) {
       return throwError(() => new Error('buildingId ID not found. User may not be logged in.'));
     }
     return this.http.get<responseModel>(`${this.apiUrl}/GetFloorsByBuildingId?id=${buildingId}`);
   }
+
+  getParkingByFloor(floorId: number): Observable<responseModel> {
+    return this.http.get<responseModel>(`${this.apiUrl}/GetAllParkingByFloor?id=${floorId}`);
+  }
+
+  // https://api.freeprojectapi.com/api/SmartParking/GetAllParkingByFloor?id=1
 }

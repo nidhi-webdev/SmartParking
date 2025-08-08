@@ -51,13 +51,13 @@ export interface Ifloor {
 export interface IParkingBooking {
   parkId: number;
   floorId: number;
-  custName: string;
+  custName: string | null;
   custMobileNo: string;
   vehicleNo: string;
-  parkDate: Date;
+  parkDate: Date | string;
   parkSpotNo: number;
   inTime: Date | string;
-  outTime: Date | null;
+  outTime: Date | string | null;
   amount: number;
   extraCharge: number;
   parkingNo: string;

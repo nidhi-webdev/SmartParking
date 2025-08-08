@@ -3,7 +3,7 @@
     <form class="parking-form" [formGroup]="myForm" (ngSubmit)="onBookSpot()">
         <div class="form-group">
             <label for="spotNo">Park Spot No.</label>
-            <input id="spotNo" type="text"  [value]="data.spotNo" class="form-control" readonly />
+            <input id="spotNo" type="text" [value]="data.spotNo" class="form-control" readonly />
         </div>
         <div class="form-group">
             <label for="vehicleNo">Vehicle No.</label>
@@ -20,24 +20,14 @@
             }
         </div>
         <div class="form-group">
-            <label for="customerName">Customer Name</label>
+            <label for="customerName">Customer Name (Optional)</label>
             <input id="customerName" type="text" class="form-control"  formControlName="customerName" placeholder="Customer Name" />
-            @if (!myForm.controls.customerName.valid && myForm.controls.customerName.touched) {
-                <div> customerName is required </div>
-            }
         </div>
         <div class="form-group">
             <label for="contactNumber">Contact Number</label>
             <input id="contactNumber" type="text" class="form-control" formControlName="contactNumber" placeholder="Contact Number" />
             @if (!myForm.controls.contactNumber.valid && myForm.controls.contactNumber.touched) {
                 <div> contactNumber is required </div>
-            }
-        </div>
-        <div class="form-group">
-            <label for="entryTime">Entry Time</label>
-            <input id="entryTime" type="time" formControlName="entryTime" class="form-control" />
-            @if (!myForm.controls.entryTime.valid && myForm.controls.entryTime.touched) {
-                <div> entryTime is required </div>
             }
         </div>
         <div class="form-actions">

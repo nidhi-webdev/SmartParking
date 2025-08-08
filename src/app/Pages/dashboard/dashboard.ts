@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, Signal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Master } from '../../Services/master-service';
 import { Ibuilding, Ifloor, Isite, responseModel } from '../../Models/login.model';
@@ -6,6 +6,8 @@ import { UserService } from '../../Services/user-service';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ParkingSlotModalComponent } from '../../Modals/parking-slot-modal-component/parking-slot-modal-component';
+import { ChangeDetectorRef } from '@angular/core';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -20,15 +22,17 @@ export class Dashboard implements OnInit {
   flooList = signal<Ifloor[] | null>(null);
   siteId: number = 0;
   buildingId: number = 0;
-  Ifloor: number = 0;
   parkingBlocks: number[] = [];
   floorId: number = 0;
   private sitesLoaded = false; // Flag to prevent multiple API calls
+  bookedSpotList = signal<any[]>([]);
+  lastBookedSpotNo = signal<number | null>(null);
 
   constructor(
     private master: Master,
     public userService: UserService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -36,16 +40,13 @@ export class Dashboard implements OnInit {
     if (this.sitesLoaded) {
       return;
     }
-    
+
     // First restore user data from localStorage
     this.userService.restoreUserFromStorage();
 
     // Then check if user is logged in and get sites
     setTimeout(() => {
       if (!this.userService.loggedIndata?.extraId) {
-        if (typeof window !== 'undefined') {
-          console.error('User not logged in or client ID not found');
-        }
         return;
       }
       this.getSites();
@@ -54,14 +55,39 @@ export class Dashboard implements OnInit {
 
   openModal(spotNo: number) {
     const dialogRef = this.dialog.open(ParkingSlotModalComponent, {
-      data: { spotNo }
+      data: { spotNo, floorId: this.floorId }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.refresh) {
+        // Immediately handle the new booking in local state
+        if (result.bookingData) {
+          this.handleNewBooking(result.spotNo, result.bookingData);
+        }
+        
+        // Set the just-booked animation
+        this.lastBookedSpotNo.set(result.spotNo);
+        this.cdr.detectChanges();
+        
+        // Refresh from API after a delay to get the official data
+        setTimeout(() => {
+          this.getSpotByFloor();
+        }, 1500);
+        
+        // Clear the "just booked" animation after 3 seconds
+        setTimeout(() => {
+          this.lastBookedSpotNo.set(null);
+          this.cdr.detectChanges();
+        }, 3000);
+      }
     });
   }
 
-  // Method to manually refresh sites if needed
-  refreshSites(): void {
-    this.sitesLoaded = false;
-    this.getSites();
+   // // Open modal only for available spots
+  openModalForSpot(spotNo: number) {
+    if (!this.isSpotBooked(spotNo)) {
+      this.openModal(spotNo);
+    }
   }
 
   getSites(): void {
@@ -69,9 +95,9 @@ export class Dashboard implements OnInit {
     if (this.sitesLoaded) {
       return;
     }
-    
+
     this.sitesLoaded = true; // Set flag before API call to prevent race conditions
-    
+
     this.master.getSitesByClientId().subscribe({
       next: (res: responseModel) => {
         if (res.data && Array.isArray(res.data)) {
@@ -98,18 +124,15 @@ export class Dashboard implements OnInit {
           }
         },
         error: (error) => {
-          console.error('Error fetching buildings:', error);
           this.buildingList.set([]);
         }
       });
-    } else {
-      console.error('No site selected');
     }
   }
 
   getFloor(buildingId: number) {
     if (buildingId !== null) {
-      this.master.getFloorBySiteId(buildingId).subscribe({
+      this.master.getFloorBybuildingId(buildingId).subscribe({
         next: (res: responseModel) => {
           if (res.data && Array.isArray(res.data)) {
             this.flooList.set(res.data);
@@ -118,12 +141,9 @@ export class Dashboard implements OnInit {
           }
         },
         error: (error) => {
-          console.error('Error fetching floor:', error);
           this.flooList.set([]);
         }
       });
-    } else {
-      console.error('No Building selected');
     }
   }
 
@@ -132,6 +152,79 @@ export class Dashboard implements OnInit {
     this.parkingBlocks = [];
     if (floor) {
       this.parkingBlocks = Array.from({ length: floor.totalParkingSpots }, (_, i) => i + 1);
+    }
+    this.getSpotByFloor()
+  }
+
+  // Check if a spot is booked
+  isSpotBooked(spotNo: number): boolean {
+    return this.bookedSpotList().some(booking => booking.parkSpotNo === spotNo);
+  }
+
+  // Get booking details for a spot
+  getBookingDetails(spotNo: number): any {
+    return this.bookedSpotList().find(booking => booking.parkSpotNo === spotNo);
+  }
+
+  // // Get available spots count
+  getAvailableSpotsCount(): number {
+    return this.parkingBlocks.length - this.bookedSpotList().length;
+  }
+
+  // // Get occupied spots count
+  getOccupiedSpotsCount(): number {
+    return this.bookedSpotList().length;
+  }
+
+  // // Get occupancy rate
+  getOccupancyRate(): number {
+    if (this.parkingBlocks.length === 0) return 0;
+    return Math.round((this.bookedSpotList().length / this.parkingBlocks.length) * 100);
+  }
+
+ 
+
+  getSpotByFloor() {
+    if (this.floorId !== null) {
+      this.master.getParkingByFloor(this.floorId).subscribe({
+        next: (res: any) => {
+          if (res.data && Array.isArray(res.data)) {
+            // Filter only ACTIVE bookings (where outTime is null)
+            const activeBookings = res.data.filter((booking: any) => booking.outTime === null);
+            this.bookedSpotList.set(activeBookings);
+          } else {
+            this.bookedSpotList.set([]);
+          }
+        },
+        error: (error) => {
+          this.bookedSpotList.set([]);
+        }
+      });
+    }
+  }
+
+  // Force refresh of all data
+  forceRefresh() {
+    this.bookedSpotList.set([]);
+    this.getSpotByFloor();
+  }
+
+  // Add method to handle the case where a newly booked spot might not immediately appear in API
+  handleNewBooking(spotNo: number, bookingData: any) {
+    // Temporarily add the booking to local state until API confirms
+    const currentBookings = this.bookedSpotList();
+    const newBooking = {
+      ...bookingData,
+      parkSpotNo: spotNo,
+      outTime: null // Ensure it's marked as active
+    };
+    
+    // Check if this booking already exists in the list
+    const existingBookingIndex = currentBookings.findIndex(b => b.parkSpotNo === spotNo && b.outTime === null);
+    
+    if (existingBookingIndex === -1) {
+      // Add new booking if it doesn't exist
+      this.bookedSpotList.set([...currentBookings, newBooking]);
     }
   }
 }
