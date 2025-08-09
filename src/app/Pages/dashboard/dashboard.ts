@@ -203,7 +203,7 @@ export class Dashboard implements OnInit {
     return Math.min(100, rate); // Cap at 100%
   }
 
-  // Simplified function - backend should handle filtering
+  
   getSpotByFloor() {
     if (!this.floorId || this.floorId <= 0) {
       this.bookedSpotList.set([]);
