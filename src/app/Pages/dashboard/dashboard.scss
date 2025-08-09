@@ -184,11 +184,17 @@
     margin-top: 2.5rem;
 
 }
-.parking-slot-available.just-booked {
+
+.parking-slot-available.just-booked,
+.parking-slot-occupied.just-booked {
   background-color: #ffc107 !important;
   border-color: #ffc107 !important;
-  color: #000 !important;
   animation: just-booked-pulse 2s ease-in-out;
+  
+  .spot-number,
+  .spot-status {
+    color: #000 !important;
+  }
 }
 
 .parking-layout-title {
@@ -285,6 +291,8 @@
 }
 
 .parking-slot-occupied {
+    border-color: #dc3545;
+    background: #fbeaea;
     border-color: #dc3545 !important;
     background: #fbeaea !important;
     cursor: not-allowed !important;
@@ -304,18 +312,19 @@
     }
 }
 
-.spot-number {
+    .spot-number {
     font-size: 2rem;
     font-weight: 700;
     color: #222;
     margin-bottom: 0.3rem;
 }
 
-.spot-status {
+   .spot-status {
     font-size: 1.1rem;
     font-weight: 600;
     color: #198754;
 }
+
 
 .parking-slot-occupied .spot-status {
     color: #dc3545;

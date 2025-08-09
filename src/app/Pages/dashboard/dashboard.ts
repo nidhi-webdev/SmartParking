@@ -22,6 +22,7 @@ export class Dashboard implements OnInit {
   flooList = signal<Ifloor[] | null>(null);
   siteId: number = 0;
   buildingId: number = 0;
+  Ifloor: number = 0;
   parkingBlocks: number[] = [];
   floorId: number = 0;
   private sitesLoaded = false; // Flag to prevent multiple API calls
@@ -40,10 +41,8 @@ export class Dashboard implements OnInit {
     if (this.sitesLoaded) {
       return;
     }
-
     // First restore user data from localStorage
     this.userService.restoreUserFromStorage();
-
     // Then check if user is logged in and get sites
     setTimeout(() => {
       if (!this.userService.loggedIndata?.extraId) {
@@ -64,16 +63,16 @@ export class Dashboard implements OnInit {
         if (result.bookingData) {
           this.handleNewBooking(result.spotNo, result.bookingData);
         }
-        
+
         // Set the just-booked animation
         this.lastBookedSpotNo.set(result.spotNo);
         this.cdr.detectChanges();
-        
+
         // Refresh from API after a delay to get the official data
         setTimeout(() => {
           this.getSpotByFloor();
         }, 1500);
-        
+
         // Clear the "just booked" animation after 3 seconds
         setTimeout(() => {
           this.lastBookedSpotNo.set(null);
@@ -82,13 +81,14 @@ export class Dashboard implements OnInit {
       }
     });
   }
-
-   // // Open modal only for available spots
+  // Open modal only for available spots
   openModalForSpot(spotNo: number) {
     if (!this.isSpotBooked(spotNo)) {
       this.openModal(spotNo);
     }
   }
+
+
 
   getSites(): void {
     // Prevent multiple API calls
@@ -124,9 +124,12 @@ export class Dashboard implements OnInit {
           }
         },
         error: (error) => {
+          console.error('Error fetching buildings:', error);
           this.buildingList.set([]);
         }
       });
+    } else {
+      console.error('No site selected');
     }
   }
 
@@ -141,9 +144,12 @@ export class Dashboard implements OnInit {
           }
         },
         error: (error) => {
+          console.error('Error fetching floor:', error);
           this.flooList.set([]);
         }
       });
+    } else {
+      console.error('No Building selected');
     }
   }
 
@@ -155,61 +161,75 @@ export class Dashboard implements OnInit {
     }
     this.getSpotByFloor()
   }
-
   // Check if a spot is booked
   isSpotBooked(spotNo: number): boolean {
-    return this.bookedSpotList().some(booking => booking.parkSpotNo === spotNo);
+    const isBooked = this.bookedSpotList().some(booking => booking.parkSpotNo === spotNo);
+    return isBooked;
   }
-
+  
   // Get booking details for a spot
   getBookingDetails(spotNo: number): any {
     return this.bookedSpotList().find(booking => booking.parkSpotNo === spotNo);
   }
-
-  // // Get available spots count
+  
+  // Get available spots count with validation
   getAvailableSpotsCount(): number {
-    return this.parkingBlocks.length - this.bookedSpotList().length;
+    const total = this.parkingBlocks.length;
+    const occupied = this.getUniqueOccupiedSpots();
+    const available = total - occupied;
+    return Math.max(0, available); // Ensure it doesn't go negative
   }
-
-  // // Get occupied spots count
+  
+  // Get unique occupied spots (remove duplicates)
+  getUniqueOccupiedSpots(): number {
+    const uniqueSpots = new Set();
+    this.bookedSpotList().forEach(booking => {
+      uniqueSpots.add(booking.parkSpotNo);
+    });
+    return uniqueSpots.size;
+  }
+  
+  // Get occupied spots count
   getOccupiedSpotsCount(): number {
-    return this.bookedSpotList().length;
+    const occupied = this.getUniqueOccupiedSpots();
+    return occupied;
   }
-
-  // // Get occupancy rate
+  
+  // Get occupancy rate
   getOccupancyRate(): number {
     if (this.parkingBlocks.length === 0) return 0;
-    return Math.round((this.bookedSpotList().length / this.parkingBlocks.length) * 100);
+    const occupied = this.getUniqueOccupiedSpots();
+    const rate = Math.round((occupied / this.parkingBlocks.length) * 100);
+    return Math.min(100, rate); // Cap at 100%
   }
 
- 
-
+  // Simplified function - backend should handle filtering
   getSpotByFloor() {
-    if (this.floorId !== null) {
-      this.master.getParkingByFloor(this.floorId).subscribe({
-        next: (res: any) => {
-          if (res.data && Array.isArray(res.data)) {
-            // Filter only ACTIVE bookings (where outTime is null)
-            const activeBookings = res.data.filter((booking: any) => booking.outTime === null);
-            this.bookedSpotList.set(activeBookings);
-          } else {
-            this.bookedSpotList.set([]);
-          }
-        },
-        error: (error) => {
+    if (!this.floorId || this.floorId <= 0) {
+      this.bookedSpotList.set([]);
+      return;
+    }
+
+    this.master.getParkingByFloor(this.floorId).subscribe({
+      next: (res: any) => {
+        if (res.data && Array.isArray(res.data)) {
+          this.bookedSpotList.set(res.data);
+        } else {
           this.bookedSpotList.set([]);
         }
-      });
-    }
+      },
+      error: (error) => {
+        console.error('Error fetching floor data:', error);
+        this.bookedSpotList.set([]);
+      }
+    });
   }
 
-  // Force refresh of all data
   forceRefresh() {
     this.bookedSpotList.set([]);
     this.getSpotByFloor();
   }
 
-  // Add method to handle the case where a newly booked spot might not immediately appear in API
   handleNewBooking(spotNo: number, bookingData: any) {
     // Temporarily add the booking to local state until API confirms
     const currentBookings = this.bookedSpotList();
@@ -218,10 +238,12 @@ export class Dashboard implements OnInit {
       parkSpotNo: spotNo,
       outTime: null // Ensure it's marked as active
     };
-    
+  
     // Check if this booking already exists in the list
-    const existingBookingIndex = currentBookings.findIndex(b => b.parkSpotNo === spotNo && b.outTime === null);
-    
+    const existingBookingIndex = currentBookings.findIndex(b => 
+      b.parkSpotNo === spotNo && (b.outTime === null || b.outTime === undefined)
+    );
+
     if (existingBookingIndex === -1) {
       // Add new booking if it doesn't exist
       this.bookedSpotList.set([...currentBookings, newBooking]);

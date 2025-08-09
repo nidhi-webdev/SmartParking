@@ -40,6 +40,4 @@ export class Master {
   getParkingByFloor(floorId: number): Observable<responseModel> {
     return this.http.get<responseModel>(`${this.apiUrl}/GetAllParkingByFloor?id=${floorId}`);
   }
-
-  // https://api.freeprojectapi.com/api/SmartParking/GetAllParkingByFloor?id=1
 }

@@ -81,49 +81,40 @@
     </div>
 
     <div class="parking-layout-section">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="parking-layout-title">Parking Layout</h3>
-            <button class="btn btn-outline-primary btn-sm" (click)="forceRefresh()">
-                🔄 Refresh
-            </button>
-        </div>
+        <h3 class="parking-layout-title">Parking Layout</h3>
         <div class="parking-legend card p-3 mb-3 d-flex flex-row align-items-center gap-4">
             <span class="legend-item"><span class="legend-dot bg-success"></span> Available
-            ({{getAvailableSpotsCount()}})
-        </span>
+                ({{getAvailableSpotsCount()}})
+            </span>
             <span class="legend-item"><span class="legend-dot bg-danger"></span> Occupied ({{getOccupiedSpotsCount()}})
-        </span>
+            </span>
         </div>
 
         @for (item of parkingBlocks; track $index) {
         <div class="parking-layout" id="parkingLayout">
             @if (!isSpotBooked(item)) {
-                <!-- Available Spot -->
-                <div class="parking-slot-available" 
-                (click)="openModalForSpot(item)"
-                [ngClass]="{'just-booked': item === lastBookedSpotNo()}"
-                data-id="{{item}}" data-status="Available"
+            <!-- Available Spot -->
+            <div class="parking-slot-available" (click)="openModalForSpot(item)"
+                [ngClass]="{'just-booked': item === lastBookedSpotNo()}" data-id="{{item}}" data-status="Available"
                 style="cursor: pointer;">
-                
-                    <div class="spot-number">A{{item}}</div>
-                    <div class="spot-status">Available</div>
-                </div>
+
+                <div class="spot-number">A{{item}}</div>
+                <div class="spot-status">Available</div>
+            </div>
             } @else {
-                <!-- Occupied Spot -->
-                <div class="parking-slot-occupied" 
-                data-id="{{item}}" data-status="Occupied"
+            <!-- Occupied Spot -->
+            <div class="parking-slot-occupied" data-id="{{item}}" data-status="Occupied"
                 style="cursor: not-allowed; background-color: #dc3545; color: white;">
-                
-                    <div class="spot-number">A{{item}}</div>
-                    <div class="spot-status">Occupied</div>
-                    @if (getBookingDetails(item)) {
-                        <div class="vehicle-info" style="font-size: 10px; margin-top: 2px;">
-                            {{getBookingDetails(item).vehicleNo}}
-                        </div>
-                    }
+
+                <div class="spot-number">A{{item}}</div>
+                <div class="spot-status">Occupied</div>
+                @if (getBookingDetails(item)) {
+                <div class="vehicle-info" style="font-size: 10px; margin-top: 2px;">
+                    {{getBookingDetails(item).vehicleNo}}
                 </div>
+                }
+            </div>
             }
         </div>
         }
     </div>
-</div>
